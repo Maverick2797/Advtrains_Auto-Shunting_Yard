@@ -1,4 +1,6 @@
 local yard = "BY" --change yard id on per-yard basis
+dir = "N" --change on per-end basis
+inv_dir = "S" --change on per-end basis
 local clockspeed = 5
 y = yard
 
@@ -18,12 +20,16 @@ local check_yard_active = function(yard_active,clockspeed)
 		S[y].line = get_line() or ""
 		S[y].yard_active = true
 		
-		if S[y].rc:match(y.."RTS") == true or S[y].single_dir then
-			S[y].RTS = true
-		end
 		atc_set_text_outside("Auto-Shunting Active")
 		atc_set_text_inside("Auto-Shunting Active")
 		set_route(y..dir.."ENTRY","PICKUP")
+		
+		if S[y].rc:match(y.."RTS") == true or S[y].single_dir then
+			S[y].RTS = true
+			S[y].dir = inv_dir
+		else
+			S[y].dir = dir
+		end
 		atc_send("S3")
 		return
 	end
