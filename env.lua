@@ -45,13 +45,24 @@ F.EOL = function(yard,dir,lane)
 				else
 				--if S[y].exiting then loco has already sorted to correct lane for departure
 				--S[y].exiting set by the pickup track
-				set_rc(S[y].rc)
+				--S[y].info to be inserted by exit track
+				set_rc(S[y].y..dir.."_EXIT")
 				set_route(yard..dir.."_"..lane, "EXIT")
-				S[y].exiting = nil
 				end
 			end
 		else -- EOL Bounce
 			atc_send("B0WD1RS4")
+		end
+	end
+end
+
+F.exit_set_info = function(yard)
+	if event.train then
+		if atc_arrow and S[y].yard_active and S[y].exiting then
+			if S[y].rc then set_rc(S[y].rc) end
+			if S[y].line then set_line(S[y].line) end
+			S[y].exiting = nil
+			S[y].yard_active = nil
 		end
 	end
 end
